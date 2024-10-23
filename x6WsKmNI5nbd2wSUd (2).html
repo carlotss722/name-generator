@@ -1,0 +1,282 @@
+<html><head><base href="https://filipino-names.example.com/"><title>Filipino Name Generator</title><style>
+:root {
+  --primary: #FF7B89;
+  --secondary: #FFB6B9;
+  --background: #FEF2F4;
+  --text: #4A4A4A;
+  --accent: #F4ACB7;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--background);
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  color: var(--text);
+}
+
+.container {
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 15px rgba(255, 123, 137, 0.2);
+  max-width: 600px;
+  width: 100%;
+}
+
+h1 {
+  color: var(--primary);
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 2rem;
+}
+
+.controls {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+select, button {
+  padding: 1rem;
+  border: 2px solid var(--primary);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background: white;
+}
+
+button {
+  background: var(--primary);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: var(--accent);
+  transform: translateY(-2px);
+}
+
+.name-display {
+  text-align: center;
+  font-size: 1.8rem;
+  min-height: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  padding: 1rem;
+  background: var(--secondary);
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.meaning {
+  font-size: 1rem;
+  color: #666;
+  margin-top: 0.5rem;
+}
+
+.history {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: var(--background);
+  border-radius: 0.5rem;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.history-item {
+  padding: 0.8rem;
+  border-bottom: 1px solid var(--secondary);
+  display: flex;
+  justify-content: space-between;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Added decorative elements */
+.hearts-decoration {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.heart {
+  position: absolute;
+  font-size: 1.5rem;
+  color: var(--accent);
+  opacity: 0.2;
+}
+</style></head><body>
+<div class="hearts-decoration" id="heartsDecoration"></div>
+<div class="container">
+  <h1>Filipino Name Generator</h1>
+  <p class="subtitle">Generate authentic Filipino names with meanings</p>
+  
+  <div class="controls">
+    <select id="nameType">
+      <option value="full">Full Name</option>
+      <option value="first">First Name Only</option>
+      <option value="surname">Surname Only</option>
+    </select>
+    
+    <select id="gender">
+      <option value="any">Any Gender</option>
+      <option value="masculine">Masculine</option>
+      <option value="feminine">Feminine</option>
+    </select>
+    
+    <button id="generate">Generate Name</button>
+  </div>
+  
+  <div class="name-display" id="nameDisplay">
+    <div id="generatedName">Click generate to create a name!</div>
+    <div id="meaning" class="meaning"></div>
+  </div>
+  
+  <div class="history" id="history">
+    <div class="history-item">Previous names will appear here...</div>
+  </div>
+</div>
+
+<script>
+const filipinoNames = {
+  masculine: {
+    first: [
+      {name: 'Agapito', meaning: 'Beloved'},
+      {name: 'Andres', meaning: 'Warrior, manly'},
+      {name: 'Bayani', meaning: 'Hero'},
+      {name: 'Crisanto', meaning: 'Golden Christ'},
+      {name: 'Danilo', meaning: 'God is my judge'},
+      {name: 'Eduardo', meaning: 'Wealthy guardian'},
+      {name: 'Fernando', meaning: 'Adventurous'},
+      {name: 'Juan', meaning: 'God is gracious'},
+      {name: 'Makisig', meaning: 'Handsome, gallant'},
+      {name: 'Rodrigo', meaning: 'Famous ruler'}
+    ]
+  },
+  feminine: {
+    first: [
+      {name: 'Amihan', meaning: 'North wind'},
+      {name: 'Bituin', meaning: 'Star'},
+      {name: 'Clara', meaning: 'Bright, clear'},
+      {name: 'Dalisay', meaning: 'Pure, genuine'},
+      {name: 'Elena', meaning: 'Bright one'},
+      {name: 'Ligaya', meaning: 'Happiness'},
+      {name: 'Marikit', meaning: 'Beautiful'},
+      {name: 'Mayumi', meaning: 'Gentle, refined'},
+      {name: 'Rosa', meaning: 'Rose'},
+      {name: 'Tala', meaning: 'Star'}
+    ]
+  },
+  surnames: [
+    {name: 'Santos', meaning: 'Saints'},
+    {name: 'Reyes', meaning: 'Kings'},
+    {name: 'Cruz', meaning: 'Cross'},
+    {name: 'Bautista', meaning: 'Baptist'},
+    {name: 'Gonzales', meaning: 'Son of Gonzalo'},
+    {name: 'Mendoza', meaning: 'Cold mountain'},
+    {name: 'Ramos', meaning: 'Branches'},
+    {name: 'Aquino', meaning: 'From the word aqua (water)'},
+    {name: 'De la Cruz', meaning: 'Of the Cross'},
+    {name: 'Del Rosario', meaning: 'Of the Rosary'}
+  ]
+};
+
+// Create floating hearts background
+function createHearts() {
+  const decoration = document.getElementById('heartsDecoration');
+  const numberOfHearts = 20;
+  
+  for (let i = 0; i < numberOfHearts; i++) {
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.innerHTML = '♥';
+    heart.style.left = `${Math.random() * 100}%`;
+    heart.style.top = `${Math.random() * 100}%`;
+    decoration.appendChild(heart);
+  }
+}
+
+function generateName(type, gender) {
+  const result = {name: '', meaning: ''};
+  
+  if (gender === 'any') {
+    gender = Math.random() > 0.5 ? 'masculine' : 'feminine';
+  }
+  
+  if (type === 'full' || type === 'first') {
+    const firstName = filipinoNames[gender].first[Math.floor(Math.random() * filipinoNames[gender].first.length)];
+    result.name = firstName.name;
+    result.meaning = firstName.meaning;
+  }
+  
+  if (type === 'full' || type === 'surname') {
+    const surname = filipinoNames.surnames[Math.floor(Math.random() * filipinoNames.surnames.length)];
+    result.name = type === 'full' ? `${result.name} ${surname.name}` : surname.name;
+    result.meaning = type === 'full' 
+      ? `First name: ${result.meaning}, Surname: ${surname.meaning}`
+      : surname.meaning;
+  }
+  
+  return result;
+}
+
+function addToHistory(nameObj) {
+  const history = document.getElementById('history');
+  const historyItem = document.createElement('div');
+  historyItem.className = 'history-item fade-in';
+  historyItem.innerHTML = `
+    <span>${nameObj.name}</span>
+    <span style="color: #666; font-size: 0.9em">${nameObj.meaning}</span>
+  `;
+  history.insertBefore(historyItem, history.firstChild);
+  
+  if (history.children.length > 10) {
+    history.removeChild(history.lastChild);
+  }
+}
+
+document.getElementById('generate').addEventListener('click', () => {
+  const type = document.getElementById('nameType').value;
+  const gender = document.getElementById('gender').value;
+  const nameDisplay = document.getElementById('generatedName');
+  const meaningDisplay = document.getElementById('meaning');
+  
+  const parent = nameDisplay.parentElement;
+  parent.className = 'name-display';
+  void parent.offsetWidth; // Trigger reflow
+  parent.className = 'name-display fade-in';
+  
+  const generated = generateName(type, gender);
+  nameDisplay.textContent = generated.name;
+  meaningDisplay.textContent = `Meaning: ${generated.meaning}`;
+  addToHistory(generated);
+});
+
+// Initialize hearts on load
+createHearts();
+</script></body></html>
